@@ -1,0 +1,7 @@
+{
+  "clangd.path": "/usr/local/opt/llvm/bin/clangd",
+  "semanticTokens.enable": true,
+  "semanticTokens.filetypes": ["c", "cpp"],
+  "inlayHint.enable": false,
+  "suggest.noselect": true
+}
