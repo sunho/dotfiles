@@ -2,26 +2,33 @@ local keyset = vim.keymap.set
 local command = vim.api.nvim_command
 local create_command = vim.api.nvim_create_user_command
 
+-- Plug 'EdenEast/nightfox.nvim'
+-- Plug 'folke/tokyonight.nvim'
 command([[
 call plug#begin()
 
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+
+Plug 'preservim/nerdcommenter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'nvim-lualine/lualine.nvim'
-Plug 'folke/tokyonight.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'echasnovski/mini.nvim'
-Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 Plug 'ggandor/lightspeed.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'xeluxee/competitest.nvim'
-Plug 'EdenEast/nightfox.nvim'
 Plug 'liuchengxu/vista.vim'
+Plug 'jlanzarotta/bufexplorer'
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
 ]])
 
 vim.g.vista_default_executive = 'coc'
+vim.api.nvim_set_option("clipboard","unnamed")
 
 -- Autocomplete
 function _G.check_back_space()
@@ -41,7 +48,7 @@ command('set updatetime=300')
 command('set signcolumn=yes')
 command('set tabstop=2')
 command('set shiftwidth=2')
-command('colorscheme nightfox')
+vim.cmd.colorscheme "catppuccin"
 
 keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
 keyset("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
@@ -50,10 +57,6 @@ keyset("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
 keyset("n", "gi", "<Plug>(coc-implementation)", {silent = true})
 keyset("n", "gr", "<Plug>(coc-references)", {silent = true})
 
-keyset("n", "<C-H>", "<C-W>h")
-keyset("n", "<C-J>", "<C-W>j")
-keyset("n", "<C-K>", "<C-W>k")
-keyset("n", "<C-L>", "<C-W>l")
 keyset("n", "<C-CR>", ":CompetiTestRun<CR>")
 
 create_command('GL', 'G log -1000', {})
@@ -66,7 +69,7 @@ create_command('CP', 'silent exec "!pbcopy < %"', {})
 
 require('lualine').setup({
   options = {
-    theme = 'tokyonight'
+    theme = 'catppuccin'
   }
 })
 
@@ -89,22 +92,20 @@ require('mini.files').setup({
   }
 })
 
-require('mini.comment').setup()
+--require("mini.surround").setup({
+  --mappings = {
+    --add = '<C-s>', -- Add surrounding in Normal and Visual modes
+    --delete = '<C-i>', -- Delete surrounding
+    --find = '', -- Find surrounding (to the right)
+    --find_left = '', -- Find surrounding (to the left)
+    --highlight = '', -- Highlight surrounding
+    --replace = '', -- Replace surrounding
+    --update_n_lines = '', -- Update `n_lines`
 
-require("mini.surround").setup({
-  mappings = {
-    add = '<C-s>', -- Add surrounding in Normal and Visual modes
-    delete = '<C-w>', -- Delete surrounding
-    find = '', -- Find surrounding (to the right)
-    find_left = '', -- Find surrounding (to the left)
-    highlight = '', -- Highlight surrounding
-    replace = '<C-r>', -- Replace surrounding
-    update_n_lines = '', -- Update `n_lines`
-
-    suffix_last = 'l', -- Suffix to search with "prev" method
-    suffix_next = 'n', -- Suffix to search with "next" method
-  }
-})
+    --suffix_last = 'l', -- Suffix to search with "prev" method
+    --suffix_next = 'n', -- Suffix to search with "next" method
+  --}
+--})
 
 require('competitest').setup(
   {
@@ -116,13 +117,17 @@ require('competitest').setup(
 )
 
 keyset( 'n', '-', function() MiniFiles.open() end)
-keyset("n", "<c-P>",
-  "<cmd>lua require('fzf-lua').files()<CR>", { silent = true })
 keyset("n", "<c-T>",
   "<cmd>execute 'edit' CocRequest('clangd', 'textDocument/switchSourceHeader', {'uri': 'file://'.expand(\"%:p\")})<CR>", { silent = true })
+
 
 -- stop netrw from showing
 command('silent! autocmd! FileExplorer *')
 command('autocmd VimEnter * ++once silent! autocmd! FileExplorer *')
+
+vim.keymap.set( "n", "<space><space>", ":Buffers<CR>")
+vim.keymap.set( "n", "<C-P>", ":Files<CR>")
+vim.keymap.set( "n", "<S-Tab>", ":bp<CR>")
+vim.keymap.set( "n", "<Tab>", ":bn<CR>")
 
 
