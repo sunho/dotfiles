@@ -3,5 +3,5 @@
   "semanticTokens.enable": true,
   "semanticTokens.filetypes": ["c", "cpp"],
   "inlayHint.enable": false,
-  "suggest.noselect": true
+  "suggest.autoTrigger": "none"
 }
