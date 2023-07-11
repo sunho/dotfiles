@@ -8,7 +8,6 @@ command([[
 call plug#begin()
 
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-
 Plug 'preservim/nerdcommenter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'nvim-lualine/lualine.nvim'
@@ -16,13 +15,12 @@ Plug 'nvim-tree/nvim-web-devicons'
 Plug 'echasnovski/mini.nvim'
 Plug 'ggandor/lightspeed.nvim'
 Plug 'tpope/vim-fugitive'
-Plug 'MunifTanjim/nui.nvim'
-Plug 'xeluxee/competitest.nvim'
 Plug 'liuchengxu/vista.vim'
-Plug 'jlanzarotta/bufexplorer'
-
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+Plug 'MunifTanjim/nui.nvim'
+Plug 'xeluxee/competitest.nvim'
 
 call plug#end()
 ]])
@@ -65,7 +63,7 @@ create_command('CE', 'CompetiTestEdit', {})
 create_command('CA', 'CompetiTestAdd', {})
 create_command('CD', 'CompetiTestDelete', {})
 create_command('VS', 'Vista', {})
-create_command('CP', 'silent exec "!pbcopy < %"', {})
+create_command('CP', 'silent exec ":%y+"', {})
 
 require('lualine').setup({
   options = {
@@ -112,6 +110,9 @@ require('competitest').setup(
     runner_ui = {
       interface = "split"
     },
+		compile_command = {
+			cpp       = { exec = 'g++',           args = {'$(FNAME)', '-o', '$(FNOEXT)', '--std=c++20', '-fsanitize=address', '-fsanitize=undefined'} },
+		},
     testcases_use_single_file = true,
   }
 )
@@ -119,7 +120,6 @@ require('competitest').setup(
 keyset( 'n', '-', function() MiniFiles.open() end)
 keyset("n", "<c-T>",
   "<cmd>execute 'edit' CocRequest('clangd', 'textDocument/switchSourceHeader', {'uri': 'file://'.expand(\"%:p\")})<CR>", { silent = true })
-
 
 -- stop netrw from showing
 command('silent! autocmd! FileExplorer *')
@@ -129,5 +129,5 @@ vim.keymap.set( "n", "<space><space>", ":Buffers<CR>")
 vim.keymap.set( "n", "<C-P>", ":Files<CR>")
 vim.keymap.set( "n", "<S-Tab>", ":bp<CR>")
 vim.keymap.set( "n", "<Tab>", ":bn<CR>")
-
+vim.keymap.set( "i", "jk", "<Esc>")
 
