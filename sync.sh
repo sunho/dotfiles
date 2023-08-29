@@ -1,6 +1,6 @@
 cp ~/.zshrc .
 cp ~/.config/nvim/coc-settings.json .
-cp ~/.config/nvim/init.lua .
+cp -r ~/.config/nvim .
 cp ~/.config/kitty/kitty.conf .
 cp ~/.config/vifm/vifmrc  .
 

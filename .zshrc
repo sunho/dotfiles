@@ -35,3 +35,14 @@ export EDITOR=nvim
 
 bindkey -s '\EOP' 'vim .^M'
 bindkey -s '\EOQ' 'vifm .^M'
+
+export PATH="$PATH:$HOME/arcanist/bin/"
+alias python=python3
+
+# pnpm
+export PNPM_HOME="/Users/sunho/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
