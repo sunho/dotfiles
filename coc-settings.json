@@ -3,5 +3,6 @@
   "semanticTokens.enable": true,
   "semanticTokens.filetypes": ["c", "cpp"],
   "inlayHint.enable": false,
-  "suggest.noselect": true
+  "suggest.noselect": true,
+  "rust-analyzer.server.path": "/usr/local/Cellar/rust-analyzer/2023-11-13/bin/rust-analyzer"
 }

@@ -12,20 +12,34 @@ require("lazy").setup({
     {
       "catppuccin/nvim",
       lazy = false,
-      name = "catppuccin"
+      name = "catppuccin",
     },
     {
       "LazyVim/LazyVim",
       import = "lazyvim.plugins",
       opts = {
         colorscheme = "catppuccin",
-      }
+      },
     },
     -- import any extras modules here
     -- { import = "lazyvim.plugins.extras.lang.typescript" },
     -- { import = "lazyvim.plugins.extras.lang.json" },
     -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
     -- import/override with your plugins
+    { import = "lazyvim.plugins.extras.lang.clangd" },
+    { import = "lazyvim.plugins.extras.lang.rust" },
+    { import = "lazyvim.plugins.extras.lang.python" },
+    -- { import = "lazyvim.plugins.extras.ui.alpha" },
+    {
+      "simrat39/rust-tools.nvim",
+      lazy = true,
+      opts = {
+        event = { "BufReadPost *.rs" },
+        server = {
+          standalone = true,
+        },
+      },
+    },
     { import = "lazyvim.plugins.extras.editor.mini-files" },
     { import = "lazyvim.plugins.extras.dap.core" },
     { import = "plugins" },

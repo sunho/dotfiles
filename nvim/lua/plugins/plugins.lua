@@ -1,29 +1,13 @@
 return {
-  { "junegunn/fzf" },
-  { "junegunn/fzf.vim" },
-  { "gfanto/fzf-lsp.nvim" },
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   init = function()
-  --     local keys = require("lazyvim.plugins.lsp.keymaps").get()
-  --     local findIndex = function(key)
-  --       for i, value in ipairs(keys) do
-  --         if value[1] == key then
-  --           return i
-  --         end
-  --       end
-  --       return -1
-  --     end
-  --     -- change a keymap
-  --     keys[findIndex("gd")] = { "gd", "<cmd>Definitions<cr>" }
-  --     keys[findIndex("gr")] = { "gr", "<cmd>References<cr>" }
-  --     keys[findIndex("gI")] = { "gI", "<cmd>Implementations<cr>" }
-  --     keys[findIndex("gy")] = { "gy", "<cmd>TypeDefinitions<cr>" }
-  --   end,
-  --   opts = {
-  --     autoformat = false,
-  --   },
-  -- },
+  -- { "junegunn/fzf" },
+  -- { "junegunn/fzf.vim" },
+  -- { "gfanto/fzf-lsp.nvim" },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      autoformat = false,
+    },
+  },
   {
     "goolord/alpha-nvim",
     event = "VimEnter",
@@ -67,17 +51,75 @@ return {
         compile_command = {
           cpp = {
             exec = "g++",
-            args = { "-Wall", "$(FNAME)", "-g", "--std=c++17", "-fsanitize=address,undefined", "-o", "$(FNOEXT)" },
+            args = { "-Wall", "$(FNAME)", "-g", "--std=c++20", "-fsanitize=address,undefined", "-o", "$(FNOEXT)" },
+
           },
+          rust = { exec = "rustc", args = { "--crate-name=_", "-o", "$(FNOEXT)", "$(FNAME)" } },
+        },
+        run_command = {
+          c = { exec = "./$(FNOEXT)" },
+          cpp = { exec = "./$(FNOEXT)" },
+          rust = { exec = "./$(FNOEXT)" },
+          python = { exec = "python3", args = { "$(FNAME)" } },
         },
         runner_ui = {
           interface = "split",
         },
+        template_file = "~/dev/algorithms/lib/template.$(FEXT)",
       })
     end,
   },
+  -- {
+  --   'neoclide/coc.nvim',
+  --   branch = "release"
+  -- },
   {
-    'neoclide/coc.nvim', 
-    branch = "release"
-  }
+    "L3MON4D3/LuaSnip",
+    keys = function()
+      return {}
+    end,
+  },
+  -- then: setup supertab in cmp
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-emoji",
+    },
+    ---@param opts cmp.ConfigSchema
+    opts = function(_, opts)
+      local has_words_before = function()
+        unpack = unpack or table.unpack
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+      end
+
+      local luasnip = require("luasnip")
+      local cmp = require("cmp")
+
+      opts.mapping = vim.tbl_extend("force", opts.mapping, {
+        ["<Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item()
+            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+            -- this way you will only jump inside the snippet region
+          elseif luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
+          elseif has_words_before() then
+            cmp.complete()
+          else
+            fallback()
+          end
+        end, { "i", "s" }),
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_prev_item()
+          elseif luasnip.jumpable(-1) then
+            luasnip.jump(-1)
+          else
+            fallback()
+          end
+        end, { "i", "s" }),
+      })
+    end,
+  },
 }
